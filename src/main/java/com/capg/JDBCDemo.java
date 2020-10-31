@@ -9,7 +9,7 @@ public class JDBCDemo {
 	
 	public static void main(String[] args) {
 		System.out.println("Welcome to jdbc");
-		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
+		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
 		String password = "Ritz@5369";
 		Connection connection;
