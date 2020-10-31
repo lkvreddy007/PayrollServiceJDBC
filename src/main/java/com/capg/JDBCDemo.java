@@ -11,7 +11,7 @@ public class JDBCDemo {
 		System.out.println("Welcome to jdbc");
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "Ritz@5369";
+		String password = "XXXXX";
 		Connection connection;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
