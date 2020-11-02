@@ -1,6 +1,7 @@
 package com.capg;
 
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollService {
 
@@ -62,5 +63,11 @@ public class EmployeePayrollService {
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
-	
+	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDBService.getAverageSalaryByGender();
+		}
+		return null;
+	}
+
 }

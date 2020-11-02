@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollDBService {
 	private  static EmployeePayrollDBService employeePayrollDBService; //To make Singleton object
@@ -37,16 +39,13 @@ public class EmployeePayrollDBService {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		for(EmployeePayrollData emp:employeePayrollList) {
-			System.out.println(emp);
-		}
 		return employeePayrollList;
 	}
 	
 	private Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "Ritz@5369";
+		String password = "XXXXX";
 		Connection connection = null;
 		System.out.println("Connecting to database "+jdbcURL);
 		try {
@@ -110,6 +109,24 @@ public class EmployeePayrollDBService {
 		return employeePayrollList;
 	}
 	
+	public Map<String, Double> getAverageSalaryByGender() {
+		String sql = "Select gender, Avg(salary) as avg_salary from employee_payroll group by gender;";
+		Map<String, Double> genderToAverageSalaryMap = new HashMap<>();
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				String gender = result.getString("gender");
+				double salary = result.getDouble("avg_salary");
+				genderToAverageSalaryMap.put(gender, salary);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return genderToAverageSalaryMap;
+	}
+	
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) {
 		 List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		 try {
@@ -137,6 +154,5 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 	}
-
 
 }

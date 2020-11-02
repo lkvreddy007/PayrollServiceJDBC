@@ -1,6 +1,7 @@
 package com.capg;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -33,6 +34,14 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.updateEmployeeSalaryUsingPreparedStatement("Terisa",3000000.00);
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
 		Assert.assertTrue(result);
+	}
+	
+	@Test
+	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_ShouldReturnProperValue() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		Map<String, Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(DB_IO);
+		Assert.assertTrue(averageSalaryByGender.get("M").equals(2000000.00) && averageSalaryByGender.get("F").equals(3000000.00));
 	}
 	
 }
