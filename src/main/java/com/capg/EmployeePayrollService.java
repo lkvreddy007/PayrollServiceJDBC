@@ -2,6 +2,7 @@ package com.capg;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollService {
 
@@ -63,6 +64,13 @@ public class EmployeePayrollService {
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
+	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			return employeePayrollDBService.getAverageSalaryByGender();
+      }
+		return null;
+	}
+
 	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, 
 																	 LocalDate startDate, LocalDate endDate) {
 		if(ioService.equals(IOService.DB_IO)) {
@@ -70,6 +78,5 @@ public class EmployeePayrollService {
 		}
 		return null;
 	}
-
-	
+  
 }
