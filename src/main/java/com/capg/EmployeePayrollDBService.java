@@ -46,7 +46,7 @@ public class EmployeePayrollDBService {
 	private Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "XXXXX";
+		String password = "Ritz@5369";
 		Connection connection = null;
 		System.out.println("Connecting to database "+jdbcURL);
 		try {
@@ -69,6 +69,24 @@ public class EmployeePayrollDBService {
 		try(Connection connection = this.getConnection()){
 			Statement statement = connection.createStatement();
 			return statement.executeUpdate(sql);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public int updateEmployeeDataUsingPrepared(String name, double salary) {
+		return this.updateEmployeeDataUsingPreparedStatement(name, salary);
+	}
+
+	private int updateEmployeeDataUsingPreparedStatement(String name, double salary) {
+		String sql = String.format("update employee_payroll set salary = ? where name = ?;");
+		try(Connection connection = this.getConnection()){
+			PreparedStatement prepStatement = connection.prepareStatement(sql);
+			prepStatement.setDouble(1, salary);
+			prepStatement.setString(2, name);
+			return prepStatement.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -119,5 +137,6 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 	}
+
 
 }
