@@ -164,7 +164,7 @@ public class EmployeePayrollDBService {
 		}
 	}
 
-	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
+	public EmployeePayrollData addEmployeeToPayrollUC7(String name, double salary, LocalDate start, String gender) {
 		int employeeId = -1;
 		EmployeePayrollData employeePayrollData = null;
 		String sql = String.format("Insert into employee_payroll (name,gender,salary,start) values ('%s','%s',%s,'%s')", name,gender,salary,Date.valueOf(start));
@@ -179,6 +179,51 @@ public class EmployeePayrollDBService {
 			}
 			employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start);
 		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollData;
+	}
+
+	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
+		int employeeId = -1;
+		Connection connection = null;
+		EmployeePayrollData employeePayrollData = null;
+		try {
+			connection = this.getConnection();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try(Statement statement = connection.createStatement()){
+			String sql = String.format("Insert into employee_payroll (name,gender,salary,start) values ('%s','%s',%s,'%s')", name,gender,salary,Date.valueOf(start));
+			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if(rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next()) {
+					employeeId = resultSet.getInt(1);
+				}
+			}
+			employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try(Statement statement = connection.createStatement()){
+			double deductions = salary * 0.2;
+			double taxablePay = salary - deductions;
+			double tax = taxablePay * 0.1;
+			double netPay = salary - tax;
+			String sql = String.format("insert into payroll "
+									 + "(emp_id, basic_pay,deducations,taxable_pay, tax,net_pay)"
+									 + "values(%s, %s, %s, %s, %s, %s)", employeeId, salary, deductions, taxablePay, tax, netPay);
+			int rowAffected = statement.executeUpdate(sql);
+			if (rowAffected == 1) {
+				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start);
+			}
+		} 
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
