@@ -1,6 +1,7 @@
 package com.capg;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,8 +80,13 @@ public class EmployeePayrollService {
 		return null;
 	}
 
-	public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
-		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start,gender));
+	public void addEmployeeToPayrollUC9(String name, double salary, LocalDate start, String gender) {
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC9(name, salary, start,gender));
+	}
+
+	public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender,
+			ArrayList<String> deptList) {
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start,gender,deptList));
 	}
   
 }

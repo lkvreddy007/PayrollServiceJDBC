@@ -1,6 +1,7 @@
 package com.capg;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,9 @@ public class EmployeePayrollServiceTest {
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(DB_IO);
-		employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M");
+		ArrayList<String> deptList = new ArrayList<>();
+		deptList.add("Sales");
+		employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M",deptList);
 		boolean result = employeePayrollService .checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
 	}

@@ -20,6 +20,11 @@ public class EmployeePayrollData {
 		this.salary = salary;
 		this.startDate = startDate;
 	}
+	
+	public EmployeePayrollData(int id, String name, double salary, LocalDate startDate, ArrayList<String> departmentName) {
+		this(id, name, salary, startDate);
+		this.departmentName = departmentName;
+	}
 
 	@Override
 	public String toString() {
