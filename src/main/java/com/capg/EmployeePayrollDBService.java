@@ -191,6 +191,7 @@ public class EmployeePayrollDBService {
 		EmployeePayrollData employeePayrollData = null;
 		try {
 			connection = this.getConnection();
+			connection.setAutoCommit(false);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -209,6 +210,12 @@ public class EmployeePayrollDBService {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+				return employeePayrollData;
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		try(Statement statement = connection.createStatement()){
@@ -217,7 +224,7 @@ public class EmployeePayrollDBService {
 			double tax = taxablePay * 0.1;
 			double netPay = salary - tax;
 			String sql = String.format("insert into payroll "
-									 + "(emp_id, basic_pay,deducations,taxable_pay, tax,net_pay)"
+									 + "(emp_id, basic_pay,deductions,taxable_pay, tax,net_pay)"
 									 + "values(%s, %s, %s, %s, %s, %s)", employeeId, salary, deductions, taxablePay, tax, netPay);
 			int rowAffected = statement.executeUpdate(sql);
 			if (rowAffected == 1) {
@@ -226,6 +233,28 @@ public class EmployeePayrollDBService {
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+			} 
+			catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		try {
+			connection.commit();
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} 
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return employeePayrollData;
 	}
