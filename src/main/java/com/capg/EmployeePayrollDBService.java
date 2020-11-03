@@ -29,7 +29,7 @@ public class EmployeePayrollDBService {
 	}
 	
 	public List<EmployeePayrollData> readData() {
-		String sql = "Select * from employee_payroll;";
+		String sql = "Select * from employee_payroll where is_active='true';";
 		return this.getEmployeePayrollUsingDB(sql);
 	}
 	
@@ -54,7 +54,7 @@ public class EmployeePayrollDBService {
 	private Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "XXXXX";
+		String password = "Ritz@5369";
 		Connection connection = null;
 		System.out.println("Connecting to database "+jdbcURL);
 		try {
@@ -144,7 +144,8 @@ public class EmployeePayrollDBService {
 				String name = resultSet.getString("name");
 				double salary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
+				String is_active = resultSet.getString("is_active");
+				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate,is_active));
 			}
 		 }
 		 catch (SQLException e) {
@@ -156,7 +157,7 @@ public class EmployeePayrollDBService {
 	private void prepareStatementForEmployeeData() {
 		try {
 			Connection connection = this.getConnection();
-			String sql = "Select * from employee_payroll where name = ?";
+			String sql = "Select * from employee_payroll where name = ? and is_active='true';";
 			employeePayrollDataStatement = connection.prepareStatement(sql);
 		}
 		catch(SQLException e) {
@@ -352,6 +353,16 @@ public class EmployeePayrollDBService {
 			}
 		}
 		return employeePayrollData;
+	}
+
+	public void deleteEmployee(String name) {
+		String sql = String.format("update employee_payroll set is_active = 'false' where name = '%s';", name);
+		try (Connection connection = getConnection()) {
+			Statement statement = connection.createStatement();
+			statement.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

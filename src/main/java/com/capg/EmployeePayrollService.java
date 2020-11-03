@@ -54,7 +54,7 @@ public class EmployeePayrollService {
 	private EmployeePayrollData getEmployeePayrollData(String name) {
 		EmployeePayrollData employeePayrollData;
 		employeePayrollData = this.employeePayrollList.stream()
-							  .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
+							  .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name) && employeePayrollDataItem.is_active.equals("true"))
 							  .findFirst()
 							  .orElse(null);
 		return employeePayrollData;
@@ -87,6 +87,10 @@ public class EmployeePayrollService {
 	public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender,
 			ArrayList<String> deptList) {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start,gender,deptList));
+	}
+
+	public void deleteEmployee(String name) {
+		employeePayrollDBService.deleteEmployee(name);
 	}
   
 }
