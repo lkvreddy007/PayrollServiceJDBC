@@ -1,6 +1,9 @@
 package com.capg;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 public class EmployeePayrollData {
 
@@ -8,6 +11,8 @@ public class EmployeePayrollData {
 	public String name;
 	public double salary;
 	public LocalDate startDate;
+	public String companyName;
+	public ArrayList<String> departmentName;
 
 	public EmployeePayrollData(int id, String name, double salary, LocalDate startDate) {
 		this.id = id;
