@@ -67,4 +67,14 @@ public class EmployeePayrollServiceTest {
 		Assert.assertTrue(result);
 	}
 	
+	@Test
+	public void givenNewEmployee_WhenDeleted_ShouldSyncWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		employeePayrollService.deleteEmployee("Mark");
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(DB_IO);
+		System.out.println(employeePayrollData);
+		Assert.assertEquals(3, employeePayrollData.size());
+	}
+	
 }
