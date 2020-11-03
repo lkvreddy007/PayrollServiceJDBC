@@ -45,7 +45,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertTrue(averageSalaryByGender.get("M").equals(2000000.00) && averageSalaryByGender.get("F").equals(3000000.00));
  }
   
-  @Test
+	@Test
 	public void givenDateRange_WhenRetrieved_ShouldMatchEmployeeCount() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(DB_IO);
@@ -53,6 +53,15 @@ public class EmployeePayrollServiceTest {
 		LocalDate endDate = LocalDate.now();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollForDateRange(DB_IO, startDate, endDate);
 		Assert.assertEquals(3, employeePayrollData.size());
+	}
+	
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M");
+		boolean result = employeePayrollService .checkEmployeePayrollInSyncWithDB("Mark");
+		Assert.assertTrue(result);
 	}
 	
 }

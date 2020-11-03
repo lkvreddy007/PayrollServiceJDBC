@@ -78,5 +78,9 @@ public class EmployeePayrollService {
 		}
 		return null;
 	}
+
+	public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start,gender));
+	}
   
 }
