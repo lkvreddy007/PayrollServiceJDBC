@@ -16,6 +16,7 @@ import java.util.Map;
 public class EmployeePayrollDBService {
 	private  static EmployeePayrollDBService employeePayrollDBService; //To make Singleton object
 	private  PreparedStatement employeePayrollDataStatement;
+	private int connectionCounter = 0; 
 	
 	private EmployeePayrollDBService() {
 		
@@ -51,20 +52,18 @@ public class EmployeePayrollDBService {
 		return employeePayrollList;
 	}
 
-	private Connection getConnection() {
+	private Connection getConnection() throws SQLException {
+		connectionCounter++;
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "Ritz@5369";
-		Connection connection = null;
+		String password = System.getenv().get("sql_password");
+		Connection connection;
 		System.out.println("Connecting to database "+jdbcURL);
-		try {
-			System.out.println("Connecting to database:"+jdbcURL);
-			connection = DriverManager.getConnection(jdbcURL, userName, password);
-			System.out.println("Connection is successful "+connection);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println("Processing Thread: "+Thread.currentThread().getName()							
+							+"Conecting to database with Id:"+connectionCounter);
+		connection = DriverManager.getConnection(jdbcURL, userName, password);
+		System.out.println("Processing Thread: "+Thread.currentThread().getName()+
+								"Id: "+connectionCounter+"Connection is succesfull "+connection);
 		return connection;
 	}
 
