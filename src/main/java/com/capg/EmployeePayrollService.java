@@ -80,7 +80,7 @@ public class EmployeePayrollService {
 		return null;
 	}
 
-	public void addEmployeeToPayrollUC9(String name, double salary, LocalDate start, String gender) {
+	public void addEmployeeToPayroll(String name, double salary, LocalDate start, String gender) {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC9(name, salary, start,gender));
 	}
 
@@ -88,9 +88,22 @@ public class EmployeePayrollService {
 			ArrayList<String> deptList) {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, salary, start,gender,deptList));
 	}
-
+	
+	public void addEmployeeToPayroll(List<EmployeePayrollData> employeePayrollDataist) {
+		employeePayrollDataist.forEach(employeePayrollData->{
+			System.out.println("Employee Being Added: "+employeePayrollData.name);
+			this.addEmployeeToPayroll(employeePayrollData.name,employeePayrollData.salary,employeePayrollData.startDate,employeePayrollData.gender);
+			System.out.println("Employee Added: "+employeePayrollData.name);
+		});
+		System.out.println(this.employeePayrollList);
+	}
+	
 	public void deleteEmployee(String name) {
 		employeePayrollDBService.deleteEmployee(name);
+	}
+
+	public long countEntries(IOService ioService) {
+		return employeePayrollList.size();
 	}
   
 }
