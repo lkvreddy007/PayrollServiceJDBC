@@ -2,6 +2,7 @@ package com.capg;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EmployeePayrollData {
 
@@ -53,5 +54,10 @@ public class EmployeePayrollData {
 		EmployeePayrollData that = (EmployeePayrollData) obj;
 		return id == that.id && Double.compare(that.salary, salary) == 0 && name.equals(that.name);
 	} 
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, gender, salary, startDate);
+	}
 	
 }
