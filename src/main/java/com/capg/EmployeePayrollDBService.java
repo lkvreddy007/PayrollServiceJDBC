@@ -54,7 +54,7 @@ public class EmployeePayrollDBService {
 	private Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/emp_payroll_service?useSSL=false";
 		String userName = "root";
-		String password = "XXXXX";
+		String password = "Ritz@5369";
 		Connection connection = null;
 		System.out.println("Connecting to database "+jdbcURL);
 		try {
