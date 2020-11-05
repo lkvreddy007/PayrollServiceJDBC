@@ -99,4 +99,27 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(7, employeePayrollService.countEntries(DB_IO));
 	}
 	
+	@Test
+	public void given6Employees_WhenAddedToDBUsingThreads_ShouldMatchEmployeeEntries() {
+		EmployeePayrollData[] arrayOfEmps = {
+			new EmployeePayrollData(0, "Jeff Bezos","M", 100000.00, LocalDate.now()),
+			new EmployeePayrollData(0, "Bill Gates","M", 200000.00, LocalDate.now()),
+			new EmployeePayrollData(0, "Mark Zuckerberg","M", 300000.00, LocalDate.now()),
+			new EmployeePayrollData(0, "Sunder","M", 600000.00, LocalDate.now()),
+			new EmployeePayrollData(0, "Mukesh","M", 1000000.00, LocalDate.now()),
+			new EmployeePayrollData(0, "Anil","M", 200000.00, LocalDate.now()),
+		};
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.addEmployeeToPayroll(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without Thread: "+Duration.between(start, end));
+		Instant threadStart = Instant.now();
+		employeePayrollService.addEmployeesToPayrollWithThreads(Arrays.asList(arrayOfEmps));
+		Instant threadEnd = Instant.now();
+		System.out.println("Duration with Thread: "+Duration.between(threadStart, threadEnd));
+		Assert.assertEquals(13, employeePayrollService.countEntries(DB_IO));
+	}
+	
 }
