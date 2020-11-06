@@ -18,7 +18,8 @@ public class EmployeePayrollService {
 	}
 	
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
-		this.employeePayrollList = employeePayrollList;
+		this();
+		this.employeePayrollList = new ArrayList<>(employeePayrollList);
 	}
 
 	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService) {
@@ -58,7 +59,8 @@ public class EmployeePayrollService {
 			Runnable task = () -> {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				System.out.println("Employee Being Updated: "+ Thread.currentThread().getName());
-				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary);				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
+				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary);				
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
 				System.out.println("Employee Updated "+Thread.currentThread().getName());
 			};
 			Thread thread = new Thread(task, employeePayrollData.name);
