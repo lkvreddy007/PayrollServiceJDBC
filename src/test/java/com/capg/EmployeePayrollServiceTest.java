@@ -150,4 +150,18 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(13, employeePayrollService.countEntries(DB_IO));
 	}
 	
+	@Test
+	public void given6Employees_WhenDBUpdateUsingThreads_ShouldSyncWithDB() {
+		EmployeePayrollData[] arrayOfEmps = {
+				new EmployeePayrollData(0,"Jeff Bezos",500000.00),
+				new EmployeePayrollData(0, "Mark Zuckerberg",300000.00),
+				new EmployeePayrollData(0, "Sunder",700000.00),
+			};
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		employeePayrollService.updateEmployeePayrollDBWithThreads(Arrays.asList(arrayOfEmps));
+		boolean result = employeePayrollService .checkEmployeePayrollInSyncWithDB("Jeff Bezos");
+		Assert.assertTrue(result);
+	}
+	
 }

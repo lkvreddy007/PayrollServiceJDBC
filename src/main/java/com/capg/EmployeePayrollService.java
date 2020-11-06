@@ -51,6 +51,29 @@ public class EmployeePayrollService {
 		}
 		
 	}
+	
+	public void updateEmployeePayrollDBWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
+		Map<Integer,Boolean> employeeAdditionStatus = new HashMap<Integer,Boolean>();
+		employeePayrollDataList.forEach(employeePayrollData->{
+			Runnable task = () -> {
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
+				System.out.println("Employee Being Updated: "+ Thread.currentThread().getName());
+				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary);				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
+				System.out.println("Employee Updated "+Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, employeePayrollData.name);
+			thread.start();
+		});
+		while (employeeAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			}
+			catch (InterruptedException e) {
+			
+			}
+		}
+		
+	}
 
 	private EmployeePayrollData getEmployeePayrollData(String name) {
 		EmployeePayrollData employeePayrollData;
