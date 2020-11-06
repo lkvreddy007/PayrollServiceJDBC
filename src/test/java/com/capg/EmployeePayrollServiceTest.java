@@ -63,8 +63,7 @@ public class EmployeePayrollServiceTest {
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(DB_IO);
-		ArrayList<String> deptList = new ArrayList<>();
-		deptList.add("Sales");
+		String[] deptList = {"Sales"};
 		employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M",deptList);
 		boolean result = employeePayrollService .checkEmployeePayrollInSyncWithDB("Mark");
 		Assert.assertTrue(result);
@@ -102,13 +101,13 @@ public class EmployeePayrollServiceTest {
 	@Test
 	public void given6Employees_WhenAddedToDBUsingThreads_ShouldMatchEmployeeEntries() {
 		EmployeePayrollData[] arrayOfEmps = {
-			new EmployeePayrollData(0, "Jeff Bezos","M", 100000.00, LocalDate.now()),
-			new EmployeePayrollData(0, "Bill Gates","M", 200000.00, LocalDate.now()),
-			new EmployeePayrollData(0, "Mark Zuckerberg","M", 300000.00, LocalDate.now()),
-			new EmployeePayrollData(0, "Sunder","M", 600000.00, LocalDate.now()),
-			new EmployeePayrollData(0, "Mukesh","M", 1000000.00, LocalDate.now()),
-			new EmployeePayrollData(0, "Anil","M", 200000.00, LocalDate.now()),
-		};
+				new EmployeePayrollData(0, "Jeff Bezos","M", 100000.00, LocalDate.now()) ,
+				new EmployeePayrollData(0, "Bill Gates","M", 200000.00, LocalDate.now()),
+				new EmployeePayrollData(0, "Mark Zuckerberg","M", 300000.00, LocalDate.now()),
+				new EmployeePayrollData(0, "Sunder","M", 600000.00, LocalDate.now()),
+				new EmployeePayrollData(0, "Mukesh","M", 1000000.00, LocalDate.now()),
+				new EmployeePayrollData(0, "Anil","M", 200000.00, LocalDate.now()),
+			};
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(DB_IO);
 		Instant start = Instant.now();
@@ -117,6 +116,35 @@ public class EmployeePayrollServiceTest {
 		System.out.println("Duration without Thread: "+Duration.between(start, end));
 		Instant threadStart = Instant.now();
 		employeePayrollService.addEmployeesToPayrollWithThreads(Arrays.asList(arrayOfEmps));
+		Instant threadEnd = Instant.now();
+		System.out.println("Duration with Thread: "+Duration.between(threadStart, threadEnd));
+		Assert.assertEquals(13, employeePayrollService.countEntries(DB_IO));
+	}
+	
+	@Test
+	public void given6Employees_WhenAddedToERDBUsingThreads_ShouldMatchEmployeeEntries() {
+		String[] deptJeff = {"Sales"};
+		String[] deptBill = {"Marketing"};
+		String[] deptMark = {"Sales","Marketing"};
+		String[] deptSunder = {"Administrator"};
+		String[] deptMukesh = {"Administrator","Marketing"};
+		String[] deptAnil = {"Sales"};
+		EmployeePayrollData[] arrayOfEmps = {
+				new EmployeePayrollData(0,"Jeff Bezos","M", 100000.00, LocalDate.now(), deptJeff),
+				new EmployeePayrollData(0,"Bill Gates","M", 200000.00, LocalDate.now(), deptBill),
+				new EmployeePayrollData(0, "Mark Zuckerberg","M", 300000.00, LocalDate.now(), deptMark),
+				new EmployeePayrollData(0, "Sunder","M", 600000.00, LocalDate.now(), deptSunder),
+				new EmployeePayrollData(0, "Mukesh","M", 1000000.00, LocalDate.now(), deptMukesh),
+				new EmployeePayrollData(0, "Anil","M", 200000.00, LocalDate.now(), deptAnil),
+			};
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.addEmployeeToPayroll(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without Thread: "+Duration.between(start, end));
+		Instant threadStart = Instant.now();
+		employeePayrollService.addEmployeesToPayrollERDBWithThreads(Arrays.asList(arrayOfEmps));
 		Instant threadEnd = Instant.now();
 		System.out.println("Duration with Thread: "+Duration.between(threadStart, threadEnd));
 		Assert.assertEquals(13, employeePayrollService.countEntries(DB_IO));

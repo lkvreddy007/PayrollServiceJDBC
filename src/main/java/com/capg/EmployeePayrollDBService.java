@@ -259,7 +259,7 @@ public class EmployeePayrollDBService {
 		return employeePayrollData;
 	}
 
-	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start, String gender, ArrayList<String> deptList) {
+	public EmployeePayrollData addEmployeeToPayroll(String name, double salary, LocalDate start, String gender, String[] deptList) {
 		int employeeId = -1;
 		Connection connection = null;
 		EmployeePayrollData employeePayrollData = null;
@@ -293,9 +293,13 @@ public class EmployeePayrollDBService {
 		}
 		
 		try(Statement statement = connection.createStatement()){
-			String sql = String.format("Insert into department (emp_id,dept_name) values ('%s','%s')", employeeId,deptList);
-			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
-			if(rowAffected == 1) {
+			int i=0;
+			int rowAffected = 0;
+			String sql = String.format("Insert into department (emp_id,dept_name) values ('%s','%s')", employeeId,deptList[i]);
+			for(;i<deptList.length;i++) {
+				rowAffected += statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			}
+			if(rowAffected == i+1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if(resultSet.next()) {
 					employeeId = resultSet.getInt(1);

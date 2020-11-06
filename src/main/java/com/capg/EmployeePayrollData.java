@@ -12,7 +12,7 @@ public class EmployeePayrollData {
 	public String gender;
 	public LocalDate startDate;
 	public String companyName;
-	public ArrayList<String> departmentName;
+	public String[] departmentName;
 	public String is_active;
 
 	public EmployeePayrollData(int id, String name, double salary, LocalDate startDate) {
@@ -33,8 +33,8 @@ public class EmployeePayrollData {
 	}
 
 	
-	public EmployeePayrollData(int id, String name, double salary, LocalDate startDate, ArrayList<String> departmentName) {
-		this(id, name, salary, startDate);
+	public EmployeePayrollData(int id, String name,String gender, double salary, LocalDate startDate, String[] departmentName) {
+		this(id, name,gender, salary, startDate);
 		this.departmentName = departmentName;
 	}
 
