@@ -8,9 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+
 import static com.capg.EmployeePayrollService.IOService.DB_IO;
+import static com.capg.EmployeePayrollService.IOService.REST_IO;
 
 import junit.framework.Assert;
 
@@ -163,5 +170,29 @@ public class EmployeePayrollServiceTest {
 		boolean result = employeePayrollService .checkEmployeePayrollInSyncWithDB("Jeff Bezos");
 		Assert.assertTrue(result);
 	}
+		
+	@Before 
+	public void setup() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	
+	private EmployeePayrollData[] getEmployeeList() {
+		Response response = RestAssured.get("/employee_payroll");
+		System.out.println("EMPLOYEE PAYROLL ENTRIES IN JSONServer:\n"+response.asString());
+		EmployeePayrollData[] arrayOfEmps = new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
+		return arrayOfEmps;
+	}
+	
+	@Test 
+	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries(REST_IO);
+		Assert.assertEquals(2, entries);
+	}
+
+	
 	
 }
