@@ -96,7 +96,6 @@ public class EmployeePayrollService {
 			this.addEmployeeToPayroll(employeePayrollData.name,employeePayrollData.salary,employeePayrollData.startDate,employeePayrollData.gender);
 			System.out.println("Employee Added: "+employeePayrollData.name);
 		});
-		System.out.println(this.employeePayrollList);
 	}
 	
 	public void addEmployeesToPayrollWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
@@ -120,7 +119,6 @@ public class EmployeePayrollService {
 			
 			}
 		}
-		System.out.println(employeePayrollList);
 	}
   
 	
