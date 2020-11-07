@@ -178,4 +178,13 @@ public class EmployeePayrollService {
 		}
 	}
 
+	public void addEmployeesToPayrollERDBWithThreads(EmployeePayrollData employeePayrollData, IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.startDate, employeePayrollData.gender);
+		}
+		else {
+			employeePayrollList.add(employeePayrollData);
+		}
+	}
+
 }
