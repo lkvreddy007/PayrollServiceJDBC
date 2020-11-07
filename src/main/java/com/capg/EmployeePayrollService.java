@@ -145,15 +145,6 @@ public class EmployeePayrollService {
 			}
 		}
 	}
-  
-	
-	public void deleteEmployee(String name) {
-		employeePayrollDBService.deleteEmployee(name);
-	}
-
-	public long countEntries(IOService ioService) {
-		return employeePayrollList.size();
-	}
 
 	public void addEmployeesToPayrollERDBWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
 		Map<Integer,Boolean> employeeAdditionStatus = new HashMap<Integer,Boolean>();
@@ -176,6 +167,23 @@ public class EmployeePayrollService {
 			
 			}
 		}
+	}
+
+	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData,IOService ioService) {
+		if(ioService.equals(IOService.DB_IO)) {
+			this.addEmployeeToPayroll(employeePayrollData.name,employeePayrollData.salary, employeePayrollData.startDate, employeePayrollData.gender);
+		}
+		else {
+			employeePayrollList.add(employeePayrollData);
+		}
+	}
+	
+	public void deleteEmployee(String name) {
+		employeePayrollDBService.deleteEmployee(name);
+	}
+
+	public long countEntries(IOService ioService) {
+		return employeePayrollList.size();
 	}
 
 }

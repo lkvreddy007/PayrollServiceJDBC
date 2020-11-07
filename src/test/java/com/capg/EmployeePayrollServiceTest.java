@@ -3,7 +3,6 @@ package com.capg;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import com.google.gson.Gson;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 import static com.capg.EmployeePayrollService.IOService.DB_IO;
 import static com.capg.EmployeePayrollService.IOService.REST_IO;
@@ -184,6 +184,14 @@ public class EmployeePayrollServiceTest {
 		return arrayOfEmps;
 	}
 	
+	private Response addEmployeeToJsonServer(EmployeePayrollData employeePayrollData) {
+		String  empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type","application/json");
+		request.body(empJson);
+		return request.post("/employee_payroll");
+	}
+	
 	@Test 
 	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
@@ -193,6 +201,21 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(2, entries);
 	}
 
+	@Test 
+	public void givenNewEmployee_WhenAdded_ShouldMatch201ResponseAndCount() {
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 	
+		EmployeePayrollData employeePayrollData =  new EmployeePayrollData(0, "Mark Zuckerberg","M", 300000.0,LocalDate.now()); 
+		Response response = addEmployeeToJsonServer(employeePayrollData);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(201, statusCode);
+		
+		employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+		employeePayrollService.addEmployeeToPayroll(employeePayrollData,REST_IO);
+		long entries = employeePayrollService.countEntries(REST_IO);
+		Assert.assertEquals(3, entries);
+	}
 	
 }
