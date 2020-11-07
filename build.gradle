@@ -27,5 +27,15 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
+    // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
+	testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.3.1'
+	
+	testImplementation 'org.hamcrest:hamcrest-library:1.3'
+	
+	testImplementation 'org.mockito:mockito-core:2.7.22'
+    
+ 	compile 'com.google.code.gson:gson:2.2.+'
+ 
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
 }
+
